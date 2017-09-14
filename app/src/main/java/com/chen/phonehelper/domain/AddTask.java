@@ -6,10 +6,10 @@ import com.chen.phonehelper.MyApplication;
 import com.chen.phonehelper.bean.RunningTime;
 import com.chen.phonehelper.db.RunningTimeDao;
 import com.chen.phonehelper.service.RunAlways;
-
-import java.text.SimpleDateFormat;
+import com.chen.phonehelper.util.CurrentRunningApp;
 
 import cn.broadin.libutils.Logger;
+import cn.broadin.libutils.ToastUtil;
 import cn.broadin.libutils.task.TimingTask;
 import cn.broadin.libutils.task.TimingTaskManager;
 import io.reactivex.Observable;
@@ -22,17 +22,25 @@ import io.reactivex.functions.Consumer;
 public class AddTask {
     public void init() {
         markRunningTime();
-//        markCurrentApp();
+        markCurrentApp();
 
         Intent intent = new Intent(MyApplication.getContext(), RunAlways.class);
         MyApplication.getContext().startService(intent);
     }
 
     private void markCurrentApp() {
-        TimingTask task = new TimingTask(TimingTask.TYPE_INTERVAL, 60 * 1000, 0) {
+        TimingTask task = new TimingTask(TimingTask.TYPE_INTERVAL, 10 * 1000, 0) {
             @Override
             public void doTask() {
-                Logger.d("当前前台的APP:");
+                CurrentRunningApp currApp = new CurrentRunningApp();
+                if (currApp.hasPermission()) {
+                    String currPackageName = currApp.read();
+//                    assert 3 == 5;
+//                    ToastUtil.show(currPackageName);
+                } else {
+                    currApp.doShowQuan();
+                    ToastUtil.show("没有权限");
+                }
             }
         };
         task.setName("markRunningTime");

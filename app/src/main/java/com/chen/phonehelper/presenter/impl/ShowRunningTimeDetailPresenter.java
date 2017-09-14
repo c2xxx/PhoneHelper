@@ -18,7 +18,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import cn.broadin.libutils.Logger;
 import cn.broadin.libutils.helper.ThreadHelper;
 
 /**
@@ -37,19 +36,27 @@ public class ShowRunningTimeDetailPresenter
         List<RunningTimeShow> listAll = new ArrayList<>();
         long fengZhong = 60 * 1000;
         SimpleDateFormat sdf = Utils.getDefaultFenZhongDateFormat();
-        if (end > begin)
+        if (end > begin) {
             while (begin < end) {
                 RunningTimeShow rts = new RunningTimeShow();
-                rts.setTime(sdf.format(begin));
-                listAll.add(rts);
+                rts.setTime(sdf.format(begin));//这句耗时多format。
+                listAll.add(0, rts);
                 begin += fengZhong;
             }
+        }
         new ThreadHelper<List<RunningTimeShow>, List<ContentBean>>() {
             @Override
             protected List<ContentBean> runOnBackground(List<RunningTimeShow> show) {
                 RunningTimeDao dao = new RunningTimeDao(MyApplication.getContext());
-                List<RunningTime> items = dao.selectBetweenList(show.get(0).getTime(), show.get(show.size() - 1).getTime());
-                Logger.d("items size：" + items.size());
+                String begin = show.get(0).getTime();
+                String end = show.get(show.size() - 1).getTime();
+                if (begin.compareTo(end) > 0) {
+                    String temp = end;
+                    end = begin;
+                    begin = temp;
+                }
+                List<RunningTime> items = dao.selectBetweenList(begin, end);
+//                Logger.d("items size：" + items.size());
                 List<ContentBean> list = new ArrayList<>();
                 if (items != null) {
                     Set<String> timeSet = new HashSet<>();
@@ -60,7 +67,6 @@ public class ShowRunningTimeDetailPresenter
                             time = time.substring(0, 16);
                         }
                         timeSet.add(time);
-//                        Logger.d("运行时间：" + time);
                     }
                     for (RunningTimeShow item : show) {
                         ContentBean content = new ContentBean();

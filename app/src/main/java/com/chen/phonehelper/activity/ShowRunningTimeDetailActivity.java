@@ -56,7 +56,7 @@ public class ShowRunningTimeDetailActivity
         long mMin = 60 * 1000;//每分钟毫秒数
         long mHour = 60 * mMin;//一小时毫秒数
         long end = System.currentTimeMillis() + mMin;//当前时间
-        long begin = end - 10 * mHour;//减去小时数
+        long begin = end - 1 * mHour;//减去小时数
         mPresenter.loadDataList(begin, end);
     }
 
@@ -102,6 +102,7 @@ public class ShowRunningTimeDetailActivity
                 ToastUtil.show("时间：" + dateTime);
             }
         };
+        ToastUtil.show("请选择截止时间");
         dateTimePicKDialog.show();
     }
 

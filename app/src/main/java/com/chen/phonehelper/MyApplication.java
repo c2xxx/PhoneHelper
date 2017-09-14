@@ -6,6 +6,7 @@ import android.content.Context;
 import com.chen.phonehelper.domain.AddTask;
 
 import cn.broadin.libutils.AppContext;
+import cn.broadin.libutils.Logger;
 
 /**
  * Created by ChenHui on 2017/9/12.
@@ -23,6 +24,7 @@ public class MyApplication extends Application {
         super.onCreate();
         context = this.getApplicationContext();
         AppContext.setContext(this.getApplicationContext());
+        Logger.d("App onCreate");
 
         new AddTask().init();
     }

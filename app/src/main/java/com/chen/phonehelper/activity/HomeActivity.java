@@ -8,6 +8,7 @@ import com.chen.phonehelper.R;
 import com.chen.phonehelper.presenter.IHomePresenter;
 import com.chen.phonehelper.presenter.impl.HomePresenter;
 import com.chen.phonehelper.ui.IHomeView;
+import com.chen.phonehelper.util.CurrentRunningApp;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -56,14 +57,21 @@ public class HomeActivity
      */
     @OnClick(R.id.btn_02)
     public void test() {
-        Intent intent = new Intent(this, PickerActivity.class);
-        startActivity(intent);
     }
+
     /**
      * 开启服务
      */
     @OnClick(R.id.btn_03)
     public void openService() {
+        CurrentRunningApp currApp = new CurrentRunningApp();
+        if (currApp.hasPermission()) {
+            String currPackageName = currApp.read();
+            ToastUtil.show(currPackageName);
+        } else {
+            currApp.doShowQuan();
+            ToastUtil.show("没有权限");
+        }
     }
 
     /**
@@ -71,7 +79,7 @@ public class HomeActivity
      */
     @OnClick(R.id.btn_04)
     public void checkZhiWen() {
-        FingerHelper fh = new FingerHelper(this){
+        FingerHelper fh = new FingerHelper(this) {
             @Override
             protected void doSuccess() {
                 ToastUtil.show("验证成功");

@@ -16,7 +16,7 @@ import cn.broadin.libutils.MyDebugConfig;
  * Created by ChenHui on 2016/6/2.
  */
 public class TimingTaskManager {
-    private boolean isPrintLog = true;
+    private boolean isPrintLog = false;
     //单例
     private static TimingTaskManager instance = null;
     private List<TimingTask> tasks = new ArrayList<>();

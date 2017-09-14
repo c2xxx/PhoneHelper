@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.chen.phonehelper">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,6 +23,10 @@
     <uses-permission android:name="android.permission.READ_LOGS" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <!--注意这里：添加权限-->
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
 
     <application
         android:name=".MyApplication"
@@ -39,9 +44,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.Welcome" />
-        <activity android:name=".activity.ShowRunningTimeActivity" />
         <activity android:name=".activity.ShowRunningTimeDetailActivity" />
-        <activity android:name=".activity.PickerActivity" />
 
         <service android:name=".service.RunAlways" />
 

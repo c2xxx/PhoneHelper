@@ -10,6 +10,8 @@ import com.chen.phonehelper.bean.RunningTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.broadin.libutils.Logger;
+
 /**
  * Created by ChenHui on 2017/9/12.
  */
@@ -29,7 +31,8 @@ public class RunningTimeDao {
         ContentValues values = new ContentValues();
         values.put("time", item.getTime());
         db.delete(DBHelper.TABLE_RunningTime, "time=?", new String[]{item.getTime()});
-        db.insert(DBHelper.TABLE_RunningTime, null, values);
+        long xx = db.insert(DBHelper.TABLE_RunningTime, null, values);
+        Logger.d("xx=" + xx);
         db.close();
     }
 
