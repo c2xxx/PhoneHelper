@@ -1,8 +1,9 @@
-package com.chen.phonehelper.util.timePpicker;
+package com.chen.phonehelper.view.dialog.timePpicker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
 import android.widget.LinearLayout;
@@ -29,10 +30,9 @@ import cn.broadin.libutils.Logger;
  * <p>
  * } });
  */
-public class DateTimePickDialogUtil implements OnDateChangedListener,
+public class DatePickDialogUtil implements OnDateChangedListener,
         OnTimeChangedListener {
     private DatePicker datePicker;
-    private TimePicker timePicker;
     private AlertDialog ad;
     private String dateTime;
     private String initDateTime;
@@ -44,7 +44,7 @@ public class DateTimePickDialogUtil implements OnDateChangedListener,
      * @param activity     ：调用的父activity
      * @param initDateTime 初始日期时间值，作为弹出窗口的标题和日期时间初始值
      */
-    public DateTimePickDialogUtil(Activity activity, String initDateTime) {
+    public DatePickDialogUtil(Activity activity, String initDateTime) {
         this.activity = activity;
         this.initDateTime = initDateTime;
 
@@ -57,9 +57,7 @@ public class DateTimePickDialogUtil implements OnDateChangedListener,
         } else {
             initDateTime = calendar.get(Calendar.YEAR) + "年"
                     + calendar.get(Calendar.MONTH) + "月"
-                    + calendar.get(Calendar.DAY_OF_MONTH) + "日 "
-                    + calendar.get(Calendar.HOUR_OF_DAY) + ":"
-                    + calendar.get(Calendar.MINUTE);
+                    + calendar.get(Calendar.DAY_OF_MONTH) + "日";
         }
 
         datePicker.init(calendar.get(Calendar.YEAR),
@@ -78,11 +76,9 @@ public class DateTimePickDialogUtil implements OnDateChangedListener,
         LinearLayout dateTimeLayout = (LinearLayout) activity
                 .getLayoutInflater().inflate(R.layout.common_datetime, null);
         datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
-        timePicker = (TimePicker) dateTimeLayout.findViewById(R.id.timepicker);
+        TimePicker timePicker = (TimePicker) dateTimeLayout.findViewById(R.id.timepicker);
+        timePicker.setVisibility(View.GONE);
         init(datePicker, timePicker);
-        timePicker.setIs24HourView(true);
-        timePicker.setOnTimeChangedListener(this);
-
         ad = new AlertDialog.Builder(activity)
                 .setTitle(initDateTime)
                 .setView(dateTimeLayout)
@@ -120,11 +116,8 @@ public class DateTimePickDialogUtil implements OnDateChangedListener,
         // 获得日历实例
         Calendar calendar = Calendar.getInstance();
 
-        calendar.set(datePicker.getYear(), datePicker.getMonth(),
-                datePicker.getDayOfMonth(), timePicker.getCurrentHour(),
-                timePicker.getCurrentMinute());
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
-
+        calendar.set(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
         dateTime = sdf.format(calendar.getTime());
         ad.setTitle(dateTime);
     }
@@ -157,8 +150,7 @@ public class DateTimePickDialogUtil implements OnDateChangedListener,
         int currentHour = Integer.valueOf(hourStr.trim()).intValue();
         int currentMinute = Integer.valueOf(minuteStr.trim()).intValue();
 
-        calendar.set(currentYear, currentMonth, currentDay, currentHour,
-                currentMinute);
+        calendar.set(currentYear, currentMonth, currentDay, currentHour, currentMinute);
         return calendar;
     }
 

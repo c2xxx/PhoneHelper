@@ -54,6 +54,14 @@ public class HomeActivity
     /**
      * 开启服务
      */
+    @OnClick(R.id.btn_02)
+    public void test() {
+        Intent intent = new Intent(this, PickerActivity.class);
+        startActivity(intent);
+    }
+    /**
+     * 开启服务
+     */
     @OnClick(R.id.btn_03)
     public void openService() {
     }
@@ -63,7 +71,12 @@ public class HomeActivity
      */
     @OnClick(R.id.btn_04)
     public void checkZhiWen() {
-        FingerHelper fh = new FingerHelper(this);
+        FingerHelper fh = new FingerHelper(this){
+            @Override
+            protected void doSuccess() {
+                ToastUtil.show("验证成功");
+            }
+        };
         if (fh.isSupport()) {
             fh.check();
         } else {

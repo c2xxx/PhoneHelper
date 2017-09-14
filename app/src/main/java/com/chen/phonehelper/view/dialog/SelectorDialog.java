@@ -1,14 +1,6 @@
-package com.chen.phonehelper.util.dialog;
+package com.chen.phonehelper.view.dialog;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.view.View;
-import android.widget.DatePicker;
-import android.widget.LinearLayout;
-import android.widget.TimePicker;
-
-import com.chen.phonehelper.R;
 
 /**
  * Created by ChenHui on 2017/9/14.

@@ -37,7 +37,7 @@ public class RunAlways extends Service {
                         Thread.sleep(1000);
                     } catch (Exception e) {
                     }
-                    Logger.d("运行着呢");
+//                    Logger.d("运行着呢");
                 }
             }
         }).start();

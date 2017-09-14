@@ -1,8 +1,7 @@
-package com.chen.phonehelper.util.timePpicker;
+package com.chen.phonehelper.view.dialog.timePpicker;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.DatePicker.OnDateChangedListener;
@@ -30,13 +29,17 @@ import cn.broadin.libutils.Logger;
  * <p>
  * } });
  */
-public class TimePickDialogUtil implements OnDateChangedListener,
+public class MyDateTimePickDialogUtil implements OnDateChangedListener,
         OnTimeChangedListener {
+    private DatePicker datePicker;
     private TimePicker timePicker;
     private AlertDialog ad;
     private String dateTime;
     private String initDateTime;
     private Activity activity;
+    private int step = 1;//1:设置日期，2：设置时分
+    private View btn_pre_step;
+    private View btn_next_step;
 
     /**
      * 日期时间弹出选择框构造函数
@@ -44,20 +47,27 @@ public class TimePickDialogUtil implements OnDateChangedListener,
      * @param activity     ：调用的父activity
      * @param initDateTime 初始日期时间值，作为弹出窗口的标题和日期时间初始值
      */
-    public TimePickDialogUtil(Activity activity, String initDateTime) {
+    public MyDateTimePickDialogUtil(Activity activity, String initDateTime) {
         this.activity = activity;
         this.initDateTime = initDateTime;
 
     }
 
-    public void init(TimePicker timePicker) {
+    public void init(DatePicker datePicker, TimePicker timePicker) {
         Calendar calendar = Calendar.getInstance();
         if (!(null == initDateTime || "".equals(initDateTime))) {
             calendar = this.getCalendarByInintData(initDateTime);
         } else {
-            initDateTime = calendar.get(Calendar.HOUR_OF_DAY) + ":"
+            initDateTime = calendar.get(Calendar.YEAR) + "年"
+                    + calendar.get(Calendar.MONTH) + "月"
+                    + calendar.get(Calendar.DAY_OF_MONTH) + "日 "
+                    + calendar.get(Calendar.HOUR_OF_DAY) + ":"
                     + calendar.get(Calendar.MINUTE);
         }
+
+        datePicker.init(calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH), this);
         timePicker.setCurrentHour(calendar.get(Calendar.HOUR_OF_DAY));
         timePicker.setCurrentMinute(calendar.get(Calendar.MINUTE));
     }
@@ -69,31 +79,80 @@ public class TimePickDialogUtil implements OnDateChangedListener,
      */
     public AlertDialog show() {
         LinearLayout dateTimeLayout = (LinearLayout) activity
-                .getLayoutInflater().inflate(R.layout.common_datetime, null);
-        DatePicker datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
-        datePicker.setVisibility(View.GONE);
+                .getLayoutInflater().inflate(R.layout.common_datetime_my, null);
+        datePicker = (DatePicker) dateTimeLayout.findViewById(R.id.datepicker);
         timePicker = (TimePicker) dateTimeLayout.findViewById(R.id.timepicker);
-        init(timePicker);
+        btn_pre_step = dateTimeLayout.findViewById(R.id.btn_pre_step);
+        btn_next_step = dateTimeLayout.findViewById(R.id.btn_next_step);
+        btn_pre_step.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                step = 1;
+                refreshStep();
+            }
+        });
+        btn_next_step.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                step = 2;
+                refreshStep();
+            }
+        });
+        View btn_submit = dateTimeLayout.findViewById(R.id.btn_submit);
+        View btn_cancel = dateTimeLayout.findViewById(R.id.btn_cancel);
+        init(datePicker, timePicker);
         timePicker.setIs24HourView(true);
         timePicker.setOnTimeChangedListener(this);
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ad != null && ad.isShowing()) {
+                    ad.dismiss();
+                }
+                onSubmitTime(dateTime);
+            }
+        });
+        btn_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (ad != null && ad.isShowing()) {
+                    ad.dismiss();
+                }
+            }
+        });
 
         ad = new AlertDialog.Builder(activity)
                 .setTitle(initDateTime)
                 .setView(dateTimeLayout)
-                .setPositiveButton("设置", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-//                        inputDate.setText(dateTime);
-                        onSubmitTime(dateTime);
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-//                        inputDate.setText("");
-                    }
-                }).show();
+//                .setPositiveButton("设置", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int whichButton) {
+////                        inputDate.setText(dateTime);
+//                        onSubmitTime(dateTime);
+//                    }
+//                })
+//                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int whichButton) {
+////                        inputDate.setText("");
+//                    }
+//                })
+                .show();
 
         onDateChanged(null, 0, 0, 0);
         return ad;
+    }
+
+    private void refreshStep() {
+        if (step == 1) {
+            datePicker.setVisibility(View.VISIBLE);
+            timePicker.setVisibility(View.GONE);
+            btn_pre_step.setVisibility(View.GONE);
+            btn_next_step.setVisibility(View.VISIBLE);
+        } else if (step == 2) {
+            datePicker.setVisibility(View.GONE);
+            timePicker.setVisibility(View.VISIBLE);
+            btn_pre_step.setVisibility(View.VISIBLE);
+            btn_next_step.setVisibility(View.GONE);
+        }
     }
 
     /**
@@ -113,9 +172,12 @@ public class TimePickDialogUtil implements OnDateChangedListener,
                               int dayOfMonth) {
         // 获得日历实例
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, timePicker.getCurrentHour());
-        calendar.set(Calendar.MINUTE, timePicker.getCurrentMinute());
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+
+        calendar.set(datePicker.getYear(), datePicker.getMonth(),
+                datePicker.getDayOfMonth(), timePicker.getCurrentHour(),
+                timePicker.getCurrentMinute());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");
+
         dateTime = sdf.format(calendar.getTime());
         ad.setTitle(dateTime);
     }
@@ -148,7 +210,8 @@ public class TimePickDialogUtil implements OnDateChangedListener,
         int currentHour = Integer.valueOf(hourStr.trim()).intValue();
         int currentMinute = Integer.valueOf(minuteStr.trim()).intValue();
 
-        calendar.set(currentYear, currentMonth, currentDay, currentHour, currentMinute);
+        calendar.set(currentYear, currentMonth, currentDay, currentHour,
+                currentMinute);
         return calendar;
     }
 

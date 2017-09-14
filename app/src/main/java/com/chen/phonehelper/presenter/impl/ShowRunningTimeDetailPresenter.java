@@ -47,10 +47,9 @@ public class ShowRunningTimeDetailPresenter
         new ThreadHelper<List<RunningTimeShow>, List<ContentBean>>() {
             @Override
             protected List<ContentBean> runOnBackground(List<RunningTimeShow> show) {
-                Logger.d("运行时间A：");
                 RunningTimeDao dao = new RunningTimeDao(MyApplication.getContext());
-                List<RunningTime> items = dao.selectList(1000, false);
-                Logger.d("运行时间B size：" + items.size());
+                List<RunningTime> items = dao.selectBetweenList(show.get(0).getTime(), show.get(show.size() - 1).getTime());
+                Logger.d("items size：" + items.size());
                 List<ContentBean> list = new ArrayList<>();
                 if (items != null) {
                     Set<String> timeSet = new HashSet<>();
@@ -61,7 +60,7 @@ public class ShowRunningTimeDetailPresenter
                             time = time.substring(0, 16);
                         }
                         timeSet.add(time);
-                        Logger.d("运行时间：" + time);
+//                        Logger.d("运行时间：" + time);
                     }
                     for (RunningTimeShow item : show) {
                         ContentBean content = new ContentBean();
