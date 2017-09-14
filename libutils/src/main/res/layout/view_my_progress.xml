@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/dimen_1920dp"
+    android:layout_height="@dimen/dimen_50dp">
+
+    <TextView
+        android:id="@+id/progress_text_left"
+        android:layout_width="@dimen/dimen_155dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dimen_15dp"
+        android:paddingRight="@dimen/dimen_15dp"
+        android:text="00:00"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/text_size_36" />
+
+    <TextView
+        android:id="@+id/progress_text_right"
+        android:layout_width="@dimen/dimen_155dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:paddingLeft="@dimen/dimen_15dp"
+        android:paddingRight="@dimen/dimen_15dp"
+        android:text="00:00"
+        android:textColor="#ffffff"
+        android:textSize="@dimen/text_size_36" />
+
+    <cn.broadin.libutils.view.SpringProgressView
+        android:id="@+id/spv_progress"
+        android:layout_width="@dimen/dimen_1610dp"
+        android:layout_height="@dimen/dimen_15dp"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true" />
+</RelativeLayout>

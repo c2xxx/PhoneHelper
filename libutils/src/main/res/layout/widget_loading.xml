@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center">
+
+    <RelativeLayout
+        android:layout_width="@dimen/dimen_500dp"
+        android:layout_height="@dimen/dimen_230dp"
+        android:background="@drawable/loading_bg"
+        android:gravity="center">
+
+        <cn.broadin.libutils.view.LevelImageView
+            android:id="@+id/loading_iv"
+            android:layout_width="@dimen/dimen_270dp"
+            android:layout_height="@dimen/dimen_106dp"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/loading_icon" />
+
+    </RelativeLayout>
+</RelativeLayout>

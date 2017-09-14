@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="mainUpView" type="id"></item><!--每页焦点框View的id-->
+    <item name="activity_root_view" type="id"></item><!--activity顶层View的id，用于设置背景图-->
+    <item name="fragment_root_view" type="id"></item><!--fragment顶层View的id，用于设置背景图-->
+    <item name="videoViewStartPosition" type="id"></item><!--视频开始时间-->
+    <item name="carousel_indicator" type="id"></item>
+    <item name="carousel_title" type="id"></item>
+    <item name="home_carousel" type="id"></item>
+    <item name="tag_expend_1" type="id"></item><!--第一个扩展tag，为了不合别的tag冲突-->
+    <item name="tag_expend_2" type="id"></item><!--第2个扩展tag，为了不合别的tag冲突-->
+    <item name="tag_expend_3" type="id"></item><!--第3个扩展tag，为了不合别的tag冲突-->
+    <item name="tag_border_position" type="id"></item>
+    <item name="tag_expend_width_height" type="id"></item>
+    <item name="tag_expend_x_y" type="id"></item>
+
+    <!--item常用的id命名-->
+    <item name="ll_item_border" type="id"></item>
+    <item name="iv_item_img" type="id"></item>
+    <item name="tv_item_text" type="id"></item>
+    <item name="tv_item_text_sub" type="id"></item>
+</resources>
